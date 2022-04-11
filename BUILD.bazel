@@ -1,0 +1,19 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_project", "ts_config")
+load("@aspect_rules_swc//swc:swc.bzl", "swc_transpiler")
+load("@bazel_skylib//lib:partial.bzl", "partial")
+
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    visibility = ["//visibility:public"],
+)
+
+ts_project(
+    name = "test",
+    srcs = ["in.ts"],
+    transpiler = partial.make(
+        swc_transpiler,
+        js_outs = ['out.mjs']
+    ),
+    tsconfig = "//:tsconfig"
+)
